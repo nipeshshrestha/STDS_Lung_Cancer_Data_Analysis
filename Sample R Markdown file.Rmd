@@ -4,7 +4,7 @@ author: "Paiynthalir S N"
 date: "`r Sys.Date()`"
 output: html_document ---- testing the GIT integration
 ---
-## Guys please check if you all see this file when you pull in GIT... try to make some changes to this file and commit.. and we can make sure our changes are seen correctly in GIT...
+## Guys please check if you all see this file when you pull in GIT... try to make some changes to this file and commit.. and we can make sure our changes are seen correctly in GIT.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
