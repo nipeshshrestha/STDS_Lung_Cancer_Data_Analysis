@@ -22,7 +22,7 @@ library(tidyverse)
 
 
 library(readxl)
-survey_lung_cancer2_ <- read_excel("D:/Stastical Thinking and DataScience/AT2/AT2 new/survey lung cancer2..xlsx")
+survey_lung_cancer2_ <- read_excel("~/STDS/STDS_Lung_Cancer_Data_Analysis/survey lung cancer2..xlsx")
 
 View(survey_lung_cancer2_)
 
@@ -73,6 +73,7 @@ ggplot(data = df2, aes(x=GENDER  , y=AgeofSmokers)) +
   geom_bar(stat='identity', width=0.5)+
   labs(title = 'Lungs Cancer Comparision of people Smokes',
        x='GENDER',y='AgeofSmokers')
+
 #selecting Age and Alcohol Consumer variables
 df3 = df[,c(1,2)] %>%
   pivot_longer(cols=c('AGE'),
@@ -107,7 +108,7 @@ view(df)
 
 
 
-CORRELATION #To create correlatio, n plot, simply use cor(): # -1 here means we look at all columns except the first column
+CORRELATION #To create correlation, n plot, simply use cor(): # -1 here means we look at all columns except the first column
 res=cor(df[,-1])
 res
 
