@@ -15,7 +15,7 @@ library(lme4)
 library(tidyverse)
 library(readxl)
 
-Lungcancer_master <- read_excel("~/STDS/STDS_Lung_Cancer_Data_Analysis/survey lung cancer2..xlsx")
+Lungcancer_master <- read.csv("~/STDS/STDS_Lung_Cancer_Data_Analysis/Prediction lung cancer.csv")
 
 #To find if there is any missing data in the data set
 is.na(Lungcancer_master)
@@ -27,7 +27,9 @@ which(is.na(Lungcancer_master))
 # identify count of NAs in data frame
 sum(is.na(Lungcancer_master))
 
-#Result is 309 missing values
 
 #For data frames, a convenient shortcut to compute the total missing values in each column is to use colSums()
 colSums(is.na(Lungcancer_master))
+
+#Since there are no missing data, no action needed
+
