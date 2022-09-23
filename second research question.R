@@ -21,7 +21,7 @@ library(plyr)
 
 
 Lungcancer_master <- read.csv("~/STDS/STDS_Lung_Cancer_Data_Analysis/Prediction lung cancer.csv")
-Lungcancer_original <- read.csv("~/STDS/STDS_Lung_Cancer_Data_Analysis/Prediction lung cancer.csv")
+Lungcancer_original <- read.csv("~/STDS/STDS_Lung_Cancer_Data_Analysis/Prediction lung cancer.csv",stringsAsFactors=T)
 
 #To find if there is any missing data in the data set
 is.na(Lungcancer_master)
@@ -82,8 +82,6 @@ heatmap(Lungcancer_Correlation,col = cm.colors(256), scale = "column",
 heatmap(Lungcancer_Correlation,Colv = NA, col = cm.colors(256), scale = "column",
         RowSideColors = rc, margins = c(5,10))
 
-#pairs to visualize data
-pairs(Lungcancer_SmokingDrinking)
 
                                 
 #Filtering the smoking and Alcohol consumption columns along with age, sex, Lung cancer and Chronic disease coulumns
@@ -94,7 +92,11 @@ head(Lungcancer_SmokingDrinking)
 
 #Visualize the spread of the relation ship between these values
 ## pending ####
+#pairs to visualize data
+#pairs(Lungcancer_SmokingDrinking_num)
 
+#Finding a bit more out about the dataset.
+glimpse(Lungcancer_SmokingDrinking)
 
 #Regression model starts here
 #(binomial) Logistic regression is chosen, since we are trying to find the probabilty of a person getting lung cancer with given age, sex and smoking  drinking habit
@@ -106,18 +108,60 @@ Lungcancer_SmokingDrinking$id <- 1:nrow(Lungcancer_SmokingDrinking)
 Lungcancer.trainData <- Lungcancer_SmokingDrinking %>% dplyr::sample_frac(0.75)
 Lungcancer.testData  <- dplyr::anti_join(Lungcancer_SmokingDrinking, Lungcancer.trainData, by = 'id')
 
-#Finding a bit more out about the dataset.
-glimpse(Lungcancer_SmokingDrinking)
 
 #Now let’s try a simple glm() call. 
 #What is the variable we are trying to predict? 
 #The thing we are interested in is LUNG_CANCER variable. Normally we care much more about whether a person gets Lung Cancer or not than we do about other things, so we are going to try to predict that (i.e. classify our Patients) according to this outcome variable:
 
-#  in this case a family = binomia(logit) term which tells the glm to run a (binomial) logistic regression using the logistic link function.
-glm1 = glm(LUNG_CANCER ~ SMOKING + GENDER + AGE, family = binomial(logit), data = Lungcancer.trainData)
-summary(glm1)
+#  in this case a family = binomial(logit) term which tells the glm to run a (binomial) logistic regression using the logistic link function.
 
+glm_smokeAlcohol = glm(formula = LUNG_CANCER ~ SMOKING + ALCOHOL.CONSUMING + GENDER + AGE, family = binomial(logit), data = Lungcancer.trainData)
+summary(glm_smokeAlcohol)
 #Interpretation
+#Essentially glm is producing a conditional probability distribution that describes the likelihood of the outcome variable (y) occurring given the explanatory variables, which are described by a set of βi according to this function:
+
+# Residuals - For every data point used in your model, the deviance associated with that point is calculated. Having done this for each point, you have a set of such residuals, and the above output is simply a non-parametric description of their distribution.#
+
+#Coefficients - Next we see the information about the covariates, which is what people typically are primarily interested in:
+#multiple logistic regression, there would be additional covariates 
 
 
+#Model Validation 
+pred_smokeAlcohol <- predict(glm_smokeAlcohol, newdata = Lungcancer.testData)
+head(pred_smokeAlcohol)
 
+#Using the predicted values calculate the actual probabilities
+
+prob_smokeAlcohol <- predict(glm_both, newdata = Lungcancer.testData, type="response")
+head(prob_smokeAlcohol)
+
+#What about if we want to see what a specific set of new entries predicts?
+#Example what is the probability of a Female of age 38 without smoking and drinking habit to get Lung Cancer?
+
+(probF38N <- predict(glm_smokeAlcohol, newdata = data.frame(GENDER = "F", AGE = 38, ALCOHOL.CONSUMING = 1, SMOKING = 1), type = "response"))
+
+#Example what is the probability of a Female of age 58 without smoking and drinking habit to get Lung Cancer?
+(probF58N <- predict(glm_smokeAlcohol, newdata = data.frame(GENDER = "F", AGE = 58, ALCOHOL.CONSUMING = 1, SMOKING =1), type = "response"))
+
+
+#Example what is the probability of a Female of age 58 with smoking and drinking habit to get Lung Cancer?
+(probF58Y <- predict(glm_smokeAlcohol, newdata = data.frame(GENDER = "F", AGE = 58, ALCOHOL.CONSUMING = 2, SMOKING = 2), type = "response"))
+
+# In depth - Model Validation
+#We still need to work out a measure for the “correctness of our model”. One commonly used method in data science makes use of a hold out test set where we know the correct values, to test the predictions of the model. 
+
+#setting a threshold value of 0.5 for getting Lung Cancer... you may want to see if there are better settings that you could use here
+prob_smokeAlcohol
+prediction_smokeAlcohol <- ifelse(prob_smokeAlcohol > 0.5, 1, 0) 
+
+# building a contingency table of the counts at each combination of factor levels
+confusion_smokeAlcohol  <- table(Lungcancer.testData$LUNG_CANCER, prediction_smokeAlcohol) 
+confusion_smokeAlcohol
+
+#That gives us a way of talking about how many of the predictions our model got correct, how many true positives there were, how many false positives etc. Look at that wikipedia page and see if you can work out how to calculate the following things from this matrix:
+
+#true positive
+#false positive
+#precision
+#recall (also termed sensitivity)
+#accuracy
