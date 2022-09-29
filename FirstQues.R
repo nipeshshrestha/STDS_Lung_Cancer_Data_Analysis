@@ -22,7 +22,7 @@ library(tidyverse)
 
 
 library(readxl)
-#dataset1 <- read_excel("/Users/adityan/Documents/STDS Code/survey lung cancer final.xlsx")
+#dataset1 <- read_excel("/Users/Documents/STDS Code/survey lung cancer final.xlsx")
 dataset1 <- read_excel("survey lung cancer2.xlsx")
 # Display loaded file 
 View(dataset1)
