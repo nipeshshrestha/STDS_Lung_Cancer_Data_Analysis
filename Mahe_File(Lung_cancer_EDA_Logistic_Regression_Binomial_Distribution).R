@@ -214,6 +214,21 @@ glm5 <- glm(LUNG_CANCER~GENDER+AGE+SMOKING+ALCOHOL_CONSUMING, family=binomial(lo
 summary(glm5)
 
 
+#Finding probability of Male getting Luncg cancer due to Smoking and drinking with respect to age as per their level of consumption.
+
+(probM3 <- predict(glm5, newdata = data.frame(GENDER = "M", AGE= 54, SMOKING = 2, ALCOHOL_CONSUMING= 2), type = "response"))
+(probM3 <- predict(glm5, newdata = data.frame(GENDER = "M", AGE= 53, SMOKING = 2, ALCOHOL_CONSUMING= 1), type = "response"))
+(probM3 <- predict(glm5, newdata = data.frame(GENDER = "M", AGE= 63, SMOKING = 1, ALCOHOL_CONSUMING= 1), type = "response"))
+(probM3 <- predict(glm5, newdata = data.frame(GENDER = "M", AGE= 63, SMOKING = 2, ALCOHOL_CONSUMING= 2), type = "response"))
+(probM3 <- predict(glm5, newdata = data.frame(GENDER = "M", AGE= 74, SMOKING = 2, ALCOHOL_CONSUMING= 1), type = "response"))
+
+
+
+#Finding probability of Female getting Luncg cancer due to Smoking and drinking with respect to age as per their level of consumption.
+(probM3 <- predict(glm5, newdata = data.frame(GENDER = "F", AGE= 48, SMOKING = 1, ALCOHOL_CONSUMING= 2), type = "response"))
+(probM3 <- predict(glm5, newdata = data.frame(GENDER = "F", AGE= 61, SMOKING = 2, ALCOHOL_CONSUMING= 2), type = "response"))
+
+
 
 ##Model validation
 
