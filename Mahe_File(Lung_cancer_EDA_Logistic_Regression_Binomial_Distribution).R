@@ -115,11 +115,18 @@ ggplot(data = df3, aes(x=GENDER  , y=AgeofAlcoholConsumer, fill = 'GENDER')) +
 
 # Correlation Plot: FINDING THE CORRELATION BETWEEN AGE, SMOKING, ALCOHOL_CONSUMING AND LUNG_CANCER
 #selecting relevant columns from entire dataset.
-df=df[,c(1,2,3,4,5,6)]
-df
 
+df8=df[,c(3,4,5,6)]
+df8
 #CORRELATION #To create correlatio, n plot, simply use cor(): # -1 here means we look at all columns except the first column
-res=cor(df[,-2])
+
+res=cor(df8[,-1])
+res
+
+res=cor(df8)
+res
+#CORRELATION #To create correlatio, n plot, simply use cor(): # -1 here means we look at all columns except the first column
+res=cor(df[,-1])
 res
 
 ## METHOD 2: VISUALISING AND FINDING CORRELATION "RESPOND VARIABLE AND ONE EXPLANATORY VARIABLE'###
