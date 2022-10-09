@@ -39,25 +39,37 @@ str(cancer)
 #visualising the data
 #coord_flip: #Cartesian coordinates with x and y flipped
 #Flip cartesian coordinates so that horizontal becomes vertical, and vertical, horizontal. This is primarily useful for converting geoms and statistics which display y conditional on x, to x conditional on y. #theme_grey() :the signature ggplot2 theme with a light grey background and white gridlines #scale_*_gradient creates a two colour gradient (low-high)
-ggplot(data=df,aes(y=reorder(GENDER,SMOKING),x=AGE)) +  
+ggplot(data=df,aes(y=reorder(GENDER,SMOKING),x=LUNG_CANCER)) +  
   geom_bar(stat ='identity',aes(fill=SMOKING))+ 
   coord_flip() +  
   theme_grey() +  
   scale_fill_gradient(name="CANCER COMPARISION")+ 
   labs(title = 'LUNGS CANCER COMPARISION', 
-       x='AGE',y='GENDER')+  
-  geom_hline(yintercept = mean(df$AGE),size = 1, color = 'blue') 
+       x='LUNG_CANCER',y='GENDER')+  
+  geom_hline(yintercept = mean(df$LUNG_CANCER),size = 1, color = 'blue') 
 
 
+ggplot(data=df,aes(y=reorder(GENDER,ALCOHOL_CONSUMING),x=LUNG_CANCER)) +  
+  geom_bar(stat ='identity',aes(fill=ALCOHOL_CONSUMING))+ 
+  coord_flip() +  
+  theme_grey() +  
+  scale_fill_gradient(name="CANCER COMPARISION")+ 
+  labs(title = 'LUNGS CANCER COMPARISION', 
+       x='LUNG_CANCER',y='GENDER')+  
+  geom_hline(yintercept = mean(df$LUNG_CANCER),size = 1, color = 'blue') 
 
+#EXTRACTING TWO COLUMNS FROM df AND RENAMING THEM AND ASSINING THEM TO NEW DATAFRAME df2
 
-df2 = df[,c(1,2)] %>%
+##selecting Age and AgeofSmokers variables
+df2 = df[,c(2,3)] %>%
   pivot_longer(cols=c('AGE'),
                names_to='Agecriteria',
                values_to='AgeofSmokers')
 df2
 
 view(df2)
+
+###VISUALISING THE RELATION BETWEEN GENDER, AGE,SMOKING AND ALCOHOL_CONSUMING##
 
 #BOX PLOT:
 
@@ -66,7 +78,7 @@ ggplot(data = df2, aes(x=GENDER  , y=AgeofSmokers, color=Agecriteria)) +
   scale_color_brewer(palette="Dark2") + 
   geom_jitter(shape=16, position=position_jitter(0.2))+
   labs(title = 'Which gender smokes more?',
-       y='Agecriteria',x='Test Type')
+       y='AgeofSmokers',x='GENDER')
 
 #BAR PLOT:
 ggplot(data = df2, aes(x=GENDER  , y=AgeofSmokers)) + 
@@ -74,8 +86,12 @@ ggplot(data = df2, aes(x=GENDER  , y=AgeofSmokers)) +
   labs(title = 'Lungs Cancer Comparision of people Smokes',
        x='GENDER',y='AgeofSmokers')
 
-#selecting Age and Alcohol Consumer variables
-df3 = df[,c(1,2)] %>%
+
+
+
+##EXTRACTING TWO COLUMNS FROM df AND RENAMING THEM AND ASSINING THEM TO NEW DATAFRAME df3
+#selecting Age and AgeofAlcoholConsumer variables
+df3 = df[,c(2,3)] %>%
   pivot_longer(cols=c('AGE'),
                names_to='Agecriteria',
                values_to='AgeofAlcoholConsumer')
@@ -84,34 +100,31 @@ df3
 
 view(df3)
 
-
-#checking which gender drinks more.
 #BOX PLOT:
+#checking which gender drinks more by age criteria.
+
 ggplot(data = df3, aes(x=GENDER  , y=AgeofAlcoholConsumer, color= Agecriteria)) + 
   geom_boxplot()+
   scale_fill_brewer(palette="red") + 
   geom_jitter(shape=16, position=position_jitter(0.2))+
   labs(title = 'Which gender Drinks more?',
-       y='Agecriteria',x='Test Type')
+       y='AgeofAlcoholConsumer',x='GENDER')
 
 #BAR-PLOT:
-ggplot(data = df3, aes(x=GENDER  , y=AgeofAlcoholConsumer, fill = 'Purple')) + 
+ggplot(data = df3, aes(x=GENDER  , y=AgeofAlcoholConsumer, fill = 'GENDER')) + 
   geom_bar(stat='identity', width=0.5)+
   labs(title = 'Lungs Cancer Comparision of people Consuming Alcohol',
        x='GENDER',y='AgeofAlcoholConsumer')
-# Correlation Plot:
+
+
+# Correlation Plot: FINDING THE CORRELATION BETWEEN AGE, SMOKING, ALCOHOL_CONSUMING AND LUNG_CANCER
 #selecting relevant columns from entire dataset.
-df=df[,c(1,2,3,4,5)]
-view(df)
+df8=df[,c(3,4,5,6)]
+df
 
-
-
-
-
-CORRELATION #To create correlation, n plot, simply use cor(): # -1 here means we look at all columns except the first column
-res=cor(df[,-1])
+#CORRELATION #To create correlatio, n plot, simply use cor(): # -1 here means we look at all columns except the first column
+res=cor(df8)
 res
-
 
 
 
@@ -124,25 +137,27 @@ corrplot(res,type="upper", order="hclust",
 #Multiple linear regression is used to estimate the relationship between two or more independent variables and one dependent variable.
 
 
-cancer.data.lm<-lm(LUNG_CANCER~SMOKING)
-cancer.data.lm 
-summary(cancer.data.lm)
-plot(cancer.data.lm)
+cancer.data.lm1<-lm(LUNG_CANCER~SMOKING, data = cancer)
+cancer.data.lm1 
+summary(cancer.data.lm1)
+plot(cancer.data.lm1)
+deviance(cancer.data.lm1)
+
+
+cancer.data.lm2<-lm(LUNG_CANCER~ALCOHOL_CONSUMING)
+cancer.data.lm2 
+summary(cancer.data.lm2)
+plot(cancer.data.lm2)
+deviance(cancer.data.lm2)
 
 
 
-cancer.data.lm<-lm(LUNG_CANCER~ALCOHOL_CONSUMING)
-cancer.data.lm 
-summary(cancer.data.lm)
-plot(cancer.data.lm)
+cancer.data.lm3<-lm(LUNG_CANCER~SMOKING+ALCOHOL_CONSUMING)
+cancer.data.lm3
+summary(cancer.data.lm3)
+plot(cancer.data.lm3)
+deviance(cancer.data.lm3)
 
-
-
-
-cancer.data.lm<-lm(LUNG_CANCER~SMOKING+ALCOHOL_CONSUMING)
-cancer.data.lm
-summary(cancer.data.lm)
-plot(cancer.data.lm)
 
 
 
