@@ -141,6 +141,7 @@ cancer.data.lm1<-lm(LUNG_CANCER~SMOKING, data = cancer)
 cancer.data.lm1 
 summary(cancer.data.lm1)
 plot(cancer.data.lm1)
+coef(cancer.data.lm1)
 deviance(cancer.data.lm1)
 
 
@@ -148,6 +149,7 @@ cancer.data.lm2<-lm(LUNG_CANCER~ALCOHOL_CONSUMING)
 cancer.data.lm2 
 summary(cancer.data.lm2)
 plot(cancer.data.lm2)
+coef(cancer.data.lm2)
 deviance(cancer.data.lm2)
 
 
@@ -156,6 +158,7 @@ cancer.data.lm3<-lm(LUNG_CANCER~SMOKING+ALCOHOL_CONSUMING)
 cancer.data.lm3
 summary(cancer.data.lm3)
 plot(cancer.data.lm3)
+coef(cancer.data.lm3)
 deviance(cancer.data.lm3)
 
 
